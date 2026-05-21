@@ -18,7 +18,7 @@ body {
 .chat-container {
     max-width: 700px;
     margin: auto;
-    padding-bottom: 120px;
+    padding-bottom: 100px;
 }
 
 /* User message */
@@ -46,52 +46,15 @@ body {
     max-width: 80%;
 }
 
-/* Floating input */
-.input-box {
-    position: fixed;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    max-width: 700px;
-    margin: auto;
-    padding: 8px 12px;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(20px);
-    border-radius: 25px;
-}
-
-/* Glow */
-.input-box:focus-within {
-    box-shadow: 0 0 0 2px rgba(124,58,237,0.5),
-                0 0 20px rgba(124,58,237,0.3);
-}
-
-/* Remove ALL borders */
-div[data-baseweb="input"],
-div[data-baseweb="input"] input {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
+/* Chat input text color */
+textarea, input {
     color: white !important;
+    caret-color: #7c3aed !important;
 }
 
-/* Button */
-.stButton button {
-    border-radius: 999px !important;
-    background: linear-gradient(135deg, #6366f1, #7c3aed);
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    transition: 0.2s;
-}
-
-.stButton button:hover {
-    transform: scale(1.08);
-}
-
-.stButton button:active {
-    transform: scale(0.95);
+/* Placeholder */
+::placeholder {
+    color: #94a3b8 !important;
 }
 
 /* Typing dots */
@@ -114,16 +77,6 @@ div[data-baseweb="input"] input {
     color: white;
 }
 
-#typewriter {
-    font-size: 28px;
-    font-weight: bold;
-}
-
-#subtitle {
-    color: #94a3b8;
-    margin-top: 10px;
-}
-
 </style>
 """, unsafe_allow_html=True)
 
@@ -141,55 +94,29 @@ if "state" not in st.session_state:
         "clarity": {"active": False, "step": 0, "answers": {}}
     }
 
-# -------- EMPTY SCREEN WITH TYPEWRITER --------
+# -------- TYPEWRITER INTRO --------
 if len(st.session_state.chat) == 0:
-    st.markdown("""
-    <div class="empty-screen">
-        <h1>🤖</h1>
-        <h2 id="typewriter"></h2>
-        <p id="subtitle"></p>
-    </div>
+    placeholder = st.empty()
+    text = "Relay-Bot"
+    displayed = ""
 
-    <script>
-    const text1 = "Relay-Bot";
-    const text2 = "A Strategic Thinking AI";
-    const text3 = "Try: I'm confused about my future";
+    for char in text:
+        displayed += char
+        placeholder.markdown(
+            f"<div class='empty-screen'><h2>{displayed}</h2></div>",
+            unsafe_allow_html=True
+        )
+        time.sleep(0.05)
 
-    let i = 0;
-    let j = 0;
-    let k = 0;
+    st.markdown(
+        "<div class='empty-screen'><p>A Strategic Thinking AI</p></div>",
+        unsafe_allow_html=True
+    )
 
-    function typeTitle() {
-        if (i < text1.length) {
-            document.getElementById("typewriter").innerHTML += text1.charAt(i);
-            i++;
-            setTimeout(typeTitle, 80);
-        } else {
-            setTimeout(typeSubtitle, 400);
-        }
-    }
-
-    function typeSubtitle() {
-        if (j < text2.length) {
-            document.getElementById("subtitle").innerHTML += text2.charAt(j);
-            j++;
-            setTimeout(typeSubtitle, 40);
-        } else {
-            setTimeout(typeHint, 400);
-        }
-    }
-
-    function typeHint() {
-        if (k < text3.length) {
-            document.getElementById("subtitle").innerHTML += "<br>" + text3.charAt(k);
-            k++;
-            setTimeout(typeHint, 30);
-        }
-    }
-
-    typeTitle();
-    </script>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        "<div class='empty-screen'><p>Try: I'm confused about my future</p></div>",
+        unsafe_allow_html=True
+    )
 
 # -------- CHAT DISPLAY --------
 st.markdown('<div class="chat-container">', unsafe_allow_html=True)
@@ -202,22 +129,10 @@ for sender, msg in st.session_state.chat:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# -------- INPUT --------
-st.markdown('<div class="input-box">', unsafe_allow_html=True)
+# -------- INPUT (ENTER WORKS HERE) --------
+user_input = st.chat_input("Type your message...")
 
-col1, col2 = st.columns([6,1])
-
-with col1:
-    user_input = st.text_input(
-        "",
-        placeholder="Type your message...",
-        label_visibility="collapsed"
-    )
-
-with col2:
-    submitted = st.button("➤")
-
-if submitted and user_input:
+if user_input:
     st.session_state.chat.append(("user", user_input))
 
     placeholder = st.empty()
@@ -235,5 +150,3 @@ if submitted and user_input:
     st.session_state.chat.append(("bot", response))
 
     st.rerun()
-
-st.markdown('</div>', unsafe_allow_html=True)
