@@ -167,6 +167,22 @@ div[data-testid="stForm"] small {
     from { opacity: 0; transform: translateY(20px);}
     to { opacity: 1; transform: translateY(0);}
 }
+/* ===== FORCE INPUT TEXT COLOR ===== */
+
+input, textarea {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #7c3aed !important;
+}
+
+input::placeholder {
+    color: #94a3b8 !important;
+}
+
+div[data-baseweb="input"] input {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
 
 </style>
 """, unsafe_allow_html=True)
