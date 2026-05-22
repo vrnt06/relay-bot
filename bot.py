@@ -47,13 +47,13 @@ def style_line(style):
 def call_gemini(prompt):
     try:
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
+            model="gemini-1.5-flash",
             contents=prompt
         )
         return response.text
 
     except Exception as e:
-        return "⚠️ AI is currently busy. Let’s think this through manually."
+        return f"❌ ERROR: {str(e)}"
 
 # -------- DECISION DETECTION --------
 def decide_action(user_input):
