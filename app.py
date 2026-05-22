@@ -167,22 +167,6 @@ div[data-testid="stForm"] small {
     from { opacity: 0; transform: translateY(20px);}
     to { opacity: 1; transform: translateY(0);}
 }
-/* ===== FORCE INPUT TEXT COLOR ===== */
-
-input, textarea {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-    caret-color: #7c3aed !important;
-}
-
-input::placeholder {
-    color: #94a3b8 !important;
-}
-
-div[data-baseweb="input"] input {
-    color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important;
-}
 
 </style>
 """, unsafe_allow_html=True)
@@ -197,22 +181,8 @@ if "chat" not in st.session_state:
 
 if "state" not in st.session_state:
     st.session_state.state = {
-        "history": [],  # ✅ NEW (memory for agent)
-
-        "decision": {
-            "active": False,
-            "step": 0,
-            "options": "",
-            "instinct": "",
-            "practical": ""
-        },
-
-        "clarity": {
-            "active": False,
-            "step": 0,
-            "problem": "",
-            "fear": ""
-        }
+        "decision": {"active": False, "step": 0, "answers": {}, "options": []},
+        "clarity": {"active": False, "step": 0, "answers": {}}
     }
 
 # -------- EMPTY SCREEN --------
@@ -239,24 +209,37 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # -------- INPUT --------
 st.markdown('<div class="input-box">', unsafe_allow_html=True)
-# -------- INPUT --------
-user_input = st.chat_input("Type your message...")
 
-if user_input:
-    st.session_state.chat.append(("user", user_input))
+with st.form(key="chat_form", clear_on_submit=True):
+    col1, col2 = st.columns([6,1])
 
-    placeholder = st.empty()
-    placeholder.markdown(
-        '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
-        unsafe_allow_html=True
-    )
+    with col1:
+        user_input = st.text_input(
+            "",
+            placeholder="Type your message...",
+            label_visibility="collapsed"
+        )
 
-    time.sleep(0.6)
+    with col2:
+        submitted = st.form_submit_button("➤")
 
-    response = process_input(user_input, st.session_state.state)
+    if submitted and user_input:
+        st.session_state.chat.append(("user", user_input))
 
-    placeholder.empty()
-    st.session_state.chat.append(("bot", response))
+        placeholder = st.empty()
+        placeholder.markdown(
+            '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
+            unsafe_allow_html=True
+        )
 
-    st.rerun()
+        time.sleep(0.7)
+
+        response = process_input(user_input, st.session_state.state)
+
+        placeholder.empty()
+
+        st.session_state.chat.append(("bot", response))
+
+        st.rerun()
+
 st.markdown('</div>', unsafe_allow_html=True)
