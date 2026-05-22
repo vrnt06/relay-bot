@@ -55,7 +55,7 @@ def call_gemini(prompt):
     except Exception as e:
         error = str(e)
 
-        if "429" in error:
+        if "429" or "420" in error:
             return """
 Relay-Bot:
 
