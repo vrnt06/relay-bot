@@ -53,7 +53,20 @@ def call_gemini(prompt):
         return response.text
 
     except Exception as e:
-        return f"❌ ERROR: {str(e)}"
+        error = str(e)
+
+        if "429" in error:
+            return """
+Relay-Bot:
+
+⚠️ AI limit reached.
+
+Let’s think this through logically instead.
+
+What exactly are you trying to figure out?
+"""
+
+        return f"⚠️ ERROR: {error}"
 
 # -------- DECISION DETECTION --------
 def decide_action(user_input):
