@@ -239,25 +239,24 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # -------- INPUT --------
 st.markdown('<div class="input-box">', unsafe_allow_html=True)
-with st.form(key="chat_form", clear_on_submit=True):
 # -------- INPUT --------
-    user_input = st.chat_input("Type your message...")
-    
-    if user_input:
-        st.session_state.chat.append(("user", user_input))
-    
-        placeholder = st.empty()
-        placeholder.markdown(
-            '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
-            unsafe_allow_html=True
-        )
-    
-        time.sleep(0.6)
-    
-        response = process_input(user_input, st.session_state.state)
-    
-        placeholder.empty()
-        st.session_state.chat.append(("bot", response))
-    
-        st.rerun()
+user_input = st.chat_input("Type your message...")
+
+if user_input:
+    st.session_state.chat.append(("user", user_input))
+
+    placeholder = st.empty()
+    placeholder.markdown(
+        '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
+        unsafe_allow_html=True
+    )
+
+    time.sleep(0.6)
+
+    response = process_input(user_input, st.session_state.state)
+
+    placeholder.empty()
+    st.session_state.chat.append(("bot", response))
+
+    st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
