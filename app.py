@@ -240,7 +240,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 # -------- INPUT --------
 st.markdown('<div class="input-box">', unsafe_allow_html=True)
 with st.form(key="chat_form", clear_on_submit=True):
-    c# -------- INPUT --------
+# -------- INPUT --------
 user_input = st.chat_input("Type your message...")
 
 if user_input:
