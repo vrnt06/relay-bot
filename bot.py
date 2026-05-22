@@ -32,7 +32,7 @@ def agent_planner(user_input):
 # -------- LLM TOOL --------
 def llm_tool(prompt):
     if not client:
-        return "Let’s think this through logically."
+        return "❌ API KEY NOT FOUND"
 
     try:
         response = client.models.generate_content(
@@ -40,8 +40,9 @@ def llm_tool(prompt):
             contents=prompt
         )
         return response.text
-    except:
-        return "Let’s think this through logically."
+
+    except Exception as e:
+        return f"❌ ERROR: {str(e)}"
 
 
 # -------- DECISION TOOL --------
