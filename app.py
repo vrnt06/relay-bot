@@ -239,37 +239,13 @@ st.markdown('</div>', unsafe_allow_html=True)
 
 # -------- INPUT --------
 st.markdown('<div class="input-box">', unsafe_allow_html=True)
-
 with st.form(key="chat_form", clear_on_submit=True):
     col1, col2 = st.columns([6,1])
 
     with col1:
-        user_input = st.text_input(
-            "",
-            placeholder="Type your message...",
-            label_visibility="collapsed"
-        )
+        user_input = st.text_input(...)
 
     with col2:
         submitted = st.form_submit_button("➤")
-
-    if submitted and user_input:
-        st.session_state.chat.append(("user", user_input))
-
-        placeholder = st.empty()
-        placeholder.markdown(
-            '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
-            unsafe_allow_html=True
-        )
-
-        time.sleep(0.7)
-
-        response = process_input(user_input, st.session_state.state)
-
-        placeholder.empty()
-
-        st.session_state.chat.append(("bot", response))
-
-        st.rerun()
 
 st.markdown('</div>', unsafe_allow_html=True)
