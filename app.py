@@ -197,8 +197,22 @@ if "chat" not in st.session_state:
 
 if "state" not in st.session_state:
     st.session_state.state = {
-        "decision": {"active": False, "step": 0, "answers": {}, "options": []},
-        "clarity": {"active": False, "step": 0, "answers": {}}
+        "history": [],  # ✅ NEW (memory for agent)
+
+        "decision": {
+            "active": False,
+            "step": 0,
+            "options": "",
+            "instinct": "",
+            "practical": ""
+        },
+
+        "clarity": {
+            "active": False,
+            "step": 0,
+            "problem": "",
+            "fear": ""
+        }
     }
 
 # -------- EMPTY SCREEN --------
