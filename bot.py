@@ -258,22 +258,28 @@ def process_input(user_input, state):
     
         if is_general_query(user_input):
             prompt = f"""
-    You are GrowBot, an AI mentor aligned with {sdg}.
-    
-    The user asked a general question.
-    
-    You must:
-    1. Answer briefly
-    2. Connect it to learning, growth, or career
-    
-    Conversation history:
-    {state.get("history", [])[-3:]}
-    
-    User: {user_input}
-    """
+        You are GrowBot, an AI mentor aligned with {sdg}.
+        
+        The user asked a general question.
+        
+        STRICT INSTRUCTIONS:
+        - Answer the question directly first
+        - Keep it short and clear
+        - Then briefly connect it to learning, growth, or career
+        
+        DO NOT introduce yourself
+        DO NOT give long generic explanations
+        
+        User: {user_input}
+        """
         else:
             prompt = f"""
     You are GrowBot, an AI mentor aligned with {sdg}.
+
+    STRICT INSTRUCTIONS:
+    - Do NOT introduce yourself
+    - Focus only on the user’s question
+    - Give structured, useful answers.
     
     Your goal:
     - Help users think clearly
