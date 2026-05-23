@@ -73,7 +73,8 @@ def llm_tool(prompt):
 GrowBot:
 
 ⚠️ AI services are currently limited.
-
+Gemini Error: {gemini_error}
+Groq Error: {groq_error}
 Let’s think this through step-by-step instead.
 
 What exactly are you trying to figure out?
