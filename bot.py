@@ -45,7 +45,13 @@ def llm_tool(prompt):
         return response.text
 
     except:
-        return "Let’s think this through logically."
+        return """
+GrowBot:
+⚠️ AI is currently limited.
+
+Let’s work through this step-by-step instead.
+What exactly are you trying to figure out?
+"""
 
 
 # -------- REFLECTION --------
@@ -193,14 +199,12 @@ def process_input(user_input, state):
 
     else:
         prompt = f"""
-You are Relay-Bot, a strategic thinking AI.
+You are GrowBot, an AI mentor aligned with Sustainable Development Goals.
 
-Conversation history:
-{state.get("history", [])[-3:]}
-
-User: {user_input}
-
-Give a clear, confident, structured answer.
+Your goal:
+- Help users grow
+- Provide clarity in decisions
+- Guide them toward better futures
 """
         response = llm_tool(prompt)
 
