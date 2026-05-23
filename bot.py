@@ -256,6 +256,7 @@ def process_input(user_input, state):
         sdg = detect_sdg(user_input)
     
         if is_general_query(user_input):
+            response = ""
             prompt = f"""
             You are GrowBot, an AI mentor aligned with {sdg}.
             
