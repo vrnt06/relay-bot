@@ -3,7 +3,7 @@ from bot import process_input
 import time
 
 # -------- PAGE CONFIG --------
-st.set_page_config(page_title="Relay-Bot", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="GroBot", page_icon="🤖", layout="centered")
 
 # -------- CSS --------
 st.markdown("""
@@ -68,7 +68,7 @@ body {
                 0 0 20px rgba(124,58,237,0.3);
 }
 
-/* ===== REMOVE RED BORDER (FINAL FIX) ===== */
+/* ===== REMOVE RED BORDER===== */
 div[data-baseweb="input"],
 div[data-baseweb="input"]:focus-within {
     border: none !important;
@@ -92,7 +92,7 @@ input:invalid {
     box-shadow: none !important;
 }
 
-/* Remove "Press Enter" text */
+
 div[data-testid="stForm"] p,
 div[data-testid="stForm"] small {
     display: none !important;
@@ -172,8 +172,8 @@ div[data-testid="stForm"] small {
 """, unsafe_allow_html=True)
 
 # -------- HEADER --------
-st.title("🤖 Relay-Bot")
-st.caption("A Strategic Thinking AI")
+st.title("🤖 GrowBot")
+st.caption("AI Growth & Clarity Mentor")
 
 # -------- SESSION --------
 if "chat" not in st.session_state:
@@ -190,9 +190,9 @@ if len(st.session_state.chat) == 0:
     st.markdown("""
     <div class="empty-screen">
         <h1>🤖</h1>
-        <h2>Relay-Bot</h2>
-        <p>A Strategic Thinking AI</p>
-        <p>Try: I'm confused about my future</p>
+        <h2>GrowBot</h2>
+        <p>AI Growth & Clarity Mentor</p>
+        <p>What can I help you with today?</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -221,14 +221,14 @@ with st.form(key="chat_form", clear_on_submit=True):
         )
 
     with col2:
-        submitted = st.form_submit_button("➤")
+        submitted = st.form_submit_button("Enter")
 
     if submitted and user_input:
         st.session_state.chat.append(("user", user_input))
 
         placeholder = st.empty()
         placeholder.markdown(
-            '<div class="bot-msg">🤖 Relay-Bot is thinking<span class="dots"></span></div>',
+            '<div class="bot-msg">🤖 GroBot is thinking<span class="dots"></span></div>',
             unsafe_allow_html=True
         )
 
