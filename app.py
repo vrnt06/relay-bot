@@ -167,7 +167,64 @@ div[data-testid="stForm"] small {
     from { opacity: 0; transform: translateY(20px);}
     to { opacity: 1; transform: translateY(0);}
 }
+/* Premium Hero Section */
+.hero {
+    animation: fadeUp 1s ease;
+}
 
+/* Big icon */
+.hero h1 {
+    font-size: 70px;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Title */
+.hero h2 {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+/* Main tagline */
+.hero .tagline {
+    font-size: 16px;
+    color: #cbd5f5;
+    margin-bottom: 8px;
+}
+
+/* Sub line */
+.hero .sub {
+    font-size: 13px;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+/* Hint text */
+.hero .hint {
+    font-size: 13px;
+    color: #7c3aed;
+    opacity: 0.8;
+}
+
+/* Smooth entry */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Floating icon */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -188,13 +245,16 @@ if "state" not in st.session_state:
 # -------- EMPTY SCREEN --------
 if len(st.session_state.chat) == 0:
     st.markdown("""
-    <div class="empty-screen">
+<div class="empty-screen">
+    <div class="hero">
         <h1>🤖</h1>
-        <h2>GrowBot</h2>
-        <p>AI Growth & Clarity Mentor</p>
-        <p>What can I help you with today?</p>
+        <h2>GroBot</h2>
+        <p class="tagline">AI Growth & Clarity Mentor</p>
+        <p class="sub">Guiding decisions • Reducing confusion • Enabling growth</p>
+        <p class="hint">Try: I'm confused about my future</p>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
 # -------- CHAT DISPLAY --------
 st.markdown('<div class="chat-container">', unsafe_allow_html=True)
