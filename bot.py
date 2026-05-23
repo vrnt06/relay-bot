@@ -121,20 +121,20 @@ def is_response_weak(response):
 # -------- RETRY IMPROVER --------
 def improve_response(user_input, state, prev_response):
     prompt = f"""
-You are GrowBot, an AI mentor.
+You are GrowBot.
 
-The previous answer was weak.
-
-Rewrite it into a BETTER answer.
+Rewrite the answer to make it:
+- Shorter
+- More personal
+- Focused on the user
 
 STRICT RULES:
-- Give ONLY the final answer
-- Do NOT give multiple options
-- Do NOT explain your thinking
-- Keep it clear, concise, and structured
+- Max 6 lines total
+- Include 1 personal reflection line
+- No bullet points
+- No headings like "Option 1"
 
 User: {user_input}
-
 Previous Answer:
 {prev_response}
 """
@@ -259,22 +259,23 @@ def process_input(user_input, state):
     
         if is_general_query(user_input):
             prompt = f"""
-    You are GrowBot, an AI mentor aligned with {sdg}.
-    
-    The user asked a general question.
-    
-    STRICT INSTRUCTIONS:
-    1. Answer the question clearly and briefly
-    2. Connect it to learning, growth, or career
-    3. Relate it to the user's life
-    4. End with ONE reflective question
-    
-    DO NOT introduce yourself
-    DO NOT give multiple options
-    DO NOT over-explain
-    
-    User: {user_input}
-    """
+            You are GrowBot, an AI mentor aligned with {sdg}.
+            
+            The user asked a general question.
+            
+            STRICT FORMAT (MUST FOLLOW):
+            
+            1. Direct Answer (2–3 lines max)
+            2. Why it matters (growth / career / SDG)
+            3. Personal Reflection (1–2 lines ONLY, directly addressing the user)
+            
+            DO NOT:
+            - Give long explanations
+            - Give multiple sections or options
+            - Add unnecessary details
+            
+            User: {user_input}
+            """
         else:
             prompt = f"""
     You are GrowBot, an AI mentor aligned with {sdg}.
