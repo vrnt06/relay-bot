@@ -1,10 +1,12 @@
 import streamlit as st
 from google import genai
+from groq import Groq
 
 # -------- API --------
 api_key = st.secrets.get("GEMINI_API_KEY", None)
 client = genai.Client(api_key=api_key) if api_key else None
-
+groq_api_key = st.secrets.get("GROQ_API_KEY", None)
+groq_client = Groq(api_key=groq_api_key) if groq_api_key else None
 
 # -------- MEMORY --------
 def update_memory(state, user_input):
@@ -34,25 +36,48 @@ def agent_planner(user_input, state):
 
 # -------- LLM TOOL --------
 def llm_tool(prompt):
-    if not client:
-        return "Let’s think this through logically."
 
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=prompt
-        )
-        return response.text
+    # -------- 1. TRY GEMINI --------
+    if client:
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash-lite",
+                contents=prompt
+            )
+            return response.text
+        except Exception as e:
+            gemini_error = str(e)
+    else:
+        gemini_error = "No Gemini client"
 
-    except:
-        return """
+
+    # -------- 2. FALLBACK TO GROQ --------
+    if groq_client:
+        try:
+            chat = groq_client.chat.completions.create(
+                model="llama3-70b-8192",
+                messages=[
+                    {"role": "system", "content": "You are GrowBot, an AI mentor helping users think clearly."},
+                    {"role": "user", "content": prompt}
+                ]
+            )
+            return chat.choices[0].message.content
+        except Exception as e:
+            groq_error = str(e)
+    else:
+        groq_error = "No Groq client"
+
+
+    # -------- 3. FINAL FALLBACK --------
+    return f"""
 GrowBot:
-⚠️ AI is currently limited.
 
-Let’s work through this step-by-step instead.
+⚠️ AI services are currently limited.
+
+Let’s think this through step-by-step instead.
+
 What exactly are you trying to figure out?
 """
-
 
 # -------- REFLECTION --------
 def is_response_weak(response):
@@ -199,7 +224,7 @@ def process_input(user_input, state):
 
     else:
         prompt = f"""
-You are GrowBot, an AI mentor aligned with Sustainable Development Goals.
+You are GroBot, an AI mentor aligned with Sustainable Development Goals.
 
 Your goal:
 - Help users grow
