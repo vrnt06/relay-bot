@@ -108,36 +108,36 @@ What exactly are you trying to figure out?
 
 # -------- REFLECTION --------
 def is_response_weak(response):
-    weak_signals = [
-        "i don't know",
-        "maybe",
-        "not sure",
-        "it depends"
-    ]
-
-    if len(response) < 40:
+    if not response:
         return True
 
-    for signal in weak_signals:
-        if signal in response.lower():
-            return True
+    weak_signals = ["i don't know", "maybe", "not sure"]
 
-    return False
+    if len(response) < 25:
+        return True
 
+    return any(signal in response.lower() for signal in weak_signals)
 
 # -------- RETRY IMPROVER --------
 def improve_response(user_input, state, prev_response):
     prompt = f"""
-You are improving a weak answer.
+You are GrowBot, an AI mentor.
+
+The previous answer was weak.
+
+Rewrite it into a BETTER answer.
+
+STRICT RULES:
+- Give ONLY the final answer
+- Do NOT give multiple options
+- Do NOT explain your thinking
+- Keep it clear, concise, and structured
 
 User: {user_input}
 
 Previous Answer:
 {prev_response}
-
-Give a clearer, more confident, structured answer.
 """
-
     return llm_tool(prompt)
     
 def is_general_query(user_input):
@@ -253,53 +253,57 @@ def process_input(user_input, state):
         return clarity_tool(user_input, state["clarity"])
 
     elif action == "llm":
+        response = ""  # safety
+    
         sdg = detect_sdg(user_input)
     
         if is_general_query(user_input):
-            response = ""
             prompt = f"""
-            You are GrowBot, an AI mentor aligned with {sdg}.
-            
-            The user asked a general question.
-            
-            STRICT INSTRUCTIONS:
-            - Answer the question directly first
-            - Keep it short and clear
-            - Then briefly connect it to learning, growth, or career
-            
-            DO NOT introduce yourself
-            DO NOT give long generic explanations
-            
-            User: {user_input}
-            """
+    You are GrowBot, an AI mentor aligned with {sdg}.
+    
+    The user asked a general question.
+    
+    STRICT INSTRUCTIONS:
+    1. Answer the question clearly and briefly
+    2. Connect it to learning, growth, or career
+    3. Relate it to the user's life
+    4. End with ONE reflective question
+    
+    DO NOT introduce yourself
+    DO NOT give multiple options
+    DO NOT over-explain
+    
+    User: {user_input}
+    """
         else:
             prompt = f"""
-            You are GrowBot, an AI mentor aligned with {sdg}.
-        
-            STRICT INSTRUCTIONS:
-            - Do NOT introduce yourself
-            - Focus only on the user’s question
-            - Give structured, useful answers.
-            
-            Your goal:
-            - Help users think clearly
-            - Provide structured guidance
-            - Support decision-making
-            
-            Conversation history:
-            {state.get("history", [])[-3:]}
-            
-            User: {user_input}
-            
-            Give a clear, structured response.
-            """
+    You are GrowBot, an AI mentor aligned with {sdg}.
+    
+    Your goal:
+    - Help users think clearly
+    - Guide real-life decisions
+    - Align responses with personal growth
+    
+    STRICT INSTRUCTIONS:
+    - Do NOT introduce yourself
+    - Be clear and structured
+    - Relate everything to the user's life
+    - End with ONE actionable or reflective question
+    
+    Conversation history:
+    {state.get("history", [])[-3:]}
+    
+    User: {user_input}
+    """
+    
+        # 🔥 CALL LLM
+        response = llm_tool(prompt)
     
         # -------- SELF-IMPROVEMENT LOOP --------
-        if is_response_weak(response):
+        if response and is_response_weak(response):
             improved = improve_response(user_input, state, response)
-
-            # Only replace if actually better
-            if len(improved) > len(response):
+    
+            if improved and len(improved) > len(response):
                 response = improved
-
+    
         return response
