@@ -14,6 +14,32 @@ def update_memory(state, user_input):
         state["history"] = []
     state["history"].append(user_input)
 
+def detect_sdg(user_input):
+    text = user_input.lower()
+
+    # SDG 4: Education & learning
+    if any(w in text for w in [
+        "study", "career", "future", "choose", "college",
+        "course", "learn", "education", "what should i do"
+    ]):
+        return "SDG 4: Quality Education"
+
+    # SDG 3: Mental well-being
+    if any(w in text for w in [
+        "stress", "anxiety", "overthinking", "lost",
+        "confused", "mental", "pressure", "tired"
+    ]):
+        return "SDG 3: Good Health & Well-being"
+
+    # SDG 8: Jobs & growth
+    if any(w in text for w in [
+        "job", "salary", "money", "income",
+        "growth", "promotion", "work", "business"
+    ]):
+        return "SDG 8: Decent Work & Economic Growth"
+
+    # Default fallback
+    return "General Guidance"
 
 # -------- PLANNER --------
 def agent_planner(user_input, state):
@@ -113,7 +139,10 @@ Give a clearer, more confident, structured answer.
 """
 
     return llm_tool(prompt)
-
+    
+def is_general_query(user_input):
+    keywords = ["what is", "who is", "tell me", "define", "explain"]
+    return any(k in user_input.lower() for k in keywords)
 
 # -------- DECISION TOOL --------
 def decision_tool(user_input, state):
@@ -223,17 +252,42 @@ def process_input(user_input, state):
     elif action == "clarity":
         return clarity_tool(user_input, state["clarity"])
 
-    else:
-        prompt = f"""
-You are GroBot, an AI mentor aligned with Sustainable Development Goals.
+   elif action == "llm":
 
-Your goal:
-- Help users grow
-- Provide clarity in decisions
-- Guide them toward better futures
-"""
-        response = llm_tool(prompt)
-
+        sdg = detect_sdg(user_input)
+    
+        if is_general_query(user_input):
+            prompt = f"""
+    You are GrowBot, an AI mentor aligned with {sdg}.
+    
+    The user asked a general question.
+    
+    You must:
+    1. Answer briefly
+    2. Connect it to learning, growth, or career
+    
+    Conversation history:
+    {state.get("history", [])[-3:]}
+    
+    User: {user_input}
+    """
+        else:
+            prompt = f"""
+    You are GrowBot, an AI mentor aligned with {sdg}.
+    
+    Your goal:
+    - Help users think clearly
+    - Provide structured guidance
+    - Support decision-making
+    
+    Conversation history:
+    {state.get("history", [])[-3:]}
+    
+    User: {user_input}
+    
+    Give a clear, structured response.
+    """
+    
         # -------- SELF-IMPROVEMENT LOOP --------
         if is_response_weak(response):
             improved = improve_response(user_input, state, response)
