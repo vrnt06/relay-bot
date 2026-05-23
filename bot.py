@@ -252,8 +252,7 @@ def process_input(user_input, state):
     elif action == "clarity":
         return clarity_tool(user_input, state["clarity"])
 
-   elif action == "llm":
-
+  ` elif action == "llm":
         sdg = detect_sdg(user_input)
     
         if is_general_query(user_input):
